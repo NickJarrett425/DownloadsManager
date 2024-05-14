@@ -218,3 +218,51 @@ def create_software_folder(downloads_folder):
             print(f"Subfolder '{subfolder}' already exists. Skipping.")
 
     return software_folder
+
+def create_archives_folder(downloads_folder):
+    archives_folder = os.path.join(downloads_folder, "Archives")
+    archives_subfolders = ["Archives", "Compressed Files", "Disk Images"]
+    
+    # Check if the Archives folder already exists
+    if os.path.exists(archives_folder):
+        print("Archives folder already exists. Adding subfolders if needed.")
+    else:
+        try:
+            # Create the Archives folder
+            os.makedirs(archives_folder)
+            print("Archives folder created.")
+        except Exception as e:
+            print(f"An error occurred while creating Archives folder: {str(e)}")
+            return None
+
+    # Add subfolders to the Archives folder
+    for subfolder in archives_subfolders:
+        subfolder_path = os.path.join(archives_folder, subfolder)
+        if not os.path.exists(subfolder_path):
+            try:
+                # Create subfolders if they don't exist
+                os.makedirs(subfolder_path)
+                print(f"Subfolder '{subfolder}' created.")
+            except Exception as e:
+                print(f"An error occurred while creating subfolder '{subfolder}': {str(e)}")
+        else:
+            print(f"Subfolder '{subfolder}' already exists. Skipping.")
+
+    return archives_folder
+
+def create_miscellaneous_folder(downloads_folder):
+    miscellaneous_folder = os.path.join(downloads_folder, "Miscellaneous")
+    
+    # Check if the Miscellaneous folder already exists
+    if os.path.exists(miscellaneous_folder):
+        print("Miscellaneous folder already exists.")
+        return miscellaneous_folder
+    else:
+        try:
+            # Create the Miscellaneous folder
+            os.makedirs(miscellaneous_folder)
+            print("Miscellaneous folder created.")
+            return miscellaneous_folder
+        except Exception as e:
+            print(f"An error occurred while creating Miscellaneous folder: {str(e)}")
+            return None

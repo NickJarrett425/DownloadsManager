@@ -41,6 +41,20 @@ def main():
             print("Software Folder Path:", software_folder)
         else:
             print("Error creating Software folder.")
+        
+        # Create Archives folder
+        archives_folder = folders.create_archives_folder(downloads_folder)
+        if archives_folder:
+            print("Archives Folder Path:", archives_folder)
+        else:
+            print("Error creating Archives folder.")
+        
+        # Create Miscellaneous folder
+        miscellaneous_folder = folders.create_miscellaneous_folder(downloads_folder)
+        if miscellaneous_folder:
+            print("Miscellaneous Folder Path:", miscellaneous_folder)
+        else:
+            print("Error creating Miscellaneous folder.")
     else:
         print("Downloads folder not found for the current user.")
         print("Please select the downloads folder manually.")
