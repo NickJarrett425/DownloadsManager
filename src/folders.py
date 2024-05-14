@@ -1,0 +1,32 @@
+import os
+
+def create_document_subfolders(downloads_folder):
+    document_folder = os.path.join(downloads_folder, "Documents")
+    document_subfolders = ["PDFs", "Word Documents", "Spreadsheets", "Presentations", "Text Files"]
+    
+    # Check if the Documents folder already exists
+    if os.path.exists(document_folder):
+        print("Documents folder already exists. Adding subfolders if needed.")
+    else:
+        try:
+            # Create the Documents folder
+            os.makedirs(document_folder)
+            print("Documents folder created.")
+        except Exception as e:
+            print(f"An error occurred while creating Documents folder: {str(e)}")
+            return None
+
+    # Add subfolders to the Documents folder
+    for subfolder in document_subfolders:
+        subfolder_path = os.path.join(document_folder, subfolder)
+        if not os.path.exists(subfolder_path):
+            try:
+                # Create subfolders if they don't exist
+                os.makedirs(subfolder_path)
+                print(f"Subfolder '{subfolder}' created.")
+            except Exception as e:
+                print(f"An error occurred while creating subfolder '{subfolder}': {str(e)}")
+        else:
+            print(f"Subfolder '{subfolder}' already exists. Skipping.")
+
+    return document_folder
