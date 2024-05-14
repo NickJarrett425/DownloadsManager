@@ -34,6 +34,13 @@ def main():
             print("Music Folder Path:", music_folder)
         else:
             print("Error creating Music folder.")
+        
+        # Create Software folder
+        software_folder = folders.create_software_folder(downloads_folder)
+        if software_folder:
+            print("Software Folder Path:", software_folder)
+        else:
+            print("Error creating Software folder.")
     else:
         print("Downloads folder not found for the current user.")
         print("Please select the downloads folder manually.")

@@ -1,4 +1,5 @@
 import os
+import platform
 
 def create_document_subfolders(downloads_folder):
     document_folder = os.path.join(downloads_folder, "Documents")
@@ -175,3 +176,45 @@ def create_videos_folder(downloads_folder):
         except Exception as e:
             print(f"An error occurred while creating Videos folder: {str(e)}")
             return None
+        
+def create_software_folder(downloads_folder):
+    software_folder = os.path.join(downloads_folder, "Software")
+    
+    # Check if the Software folder already exists
+    if os.path.exists(software_folder):
+        print("Software folder already exists.")
+        return software_folder
+    else:
+        try:
+            # Create the Software folder
+            os.makedirs(software_folder)
+            print("Software folder created.")
+        except Exception as e:
+            print(f"An error occurred while creating Software folder: {str(e)}")
+            return None
+    
+    # Determine operating system and create appropriate subfolders
+    system = platform.system()
+    subfolders = []
+
+    if system == "Windows":
+        subfolders = ["Executables", "Installers", "Batch Files", "Java Files", "Python Files"]
+    elif system == "Darwin":  # macOS
+        subfolders = ["Disk Images", "Applications", "Java Files", "Python Files"]
+    elif system == "Linux":
+        subfolders = ["Debian Packages", "RPM Packages", "Shell Scripts", "Java Files", "Python Files"]
+
+    # Add subfolders to the Software folder
+    for subfolder in subfolders:
+        subfolder_path = os.path.join(software_folder, subfolder)
+        if not os.path.exists(subfolder_path):
+            try:
+                # Create subfolders if they don't exist
+                os.makedirs(subfolder_path)
+                print(f"Subfolder '{subfolder}' created.")
+            except Exception as e:
+                print(f"An error occurred while creating subfolder '{subfolder}': {str(e)}")
+        else:
+            print(f"Subfolder '{subfolder}' already exists. Skipping.")
+
+    return software_folder
