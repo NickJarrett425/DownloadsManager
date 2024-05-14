@@ -20,6 +20,20 @@ def main():
             print("Image Folder Path:", image_folder)
         else:
             print("Error creating image folders.")
+        
+        # Create Videos folder
+        videos_folder = folders.create_videos_folder(downloads_folder)
+        if videos_folder:
+            print("Videos Folder Path:", videos_folder)
+        else:
+            print("Error creating Videos folder.")
+        
+        # Create Music folder
+        music_folder = folders.create_music_folder(downloads_folder)
+        if music_folder:
+            print("Music Folder Path:", music_folder)
+        else:
+            print("Error creating Music folder.")
     else:
         print("Downloads folder not found for the current user.")
         print("Please select the downloads folder manually.")
