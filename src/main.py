@@ -1,5 +1,6 @@
 import finder
 import folders
+import organizer
 
 def main():
     downloads_folder = finder.find_downloads_folder()
@@ -55,6 +56,9 @@ def main():
             print("Miscellaneous Folder Path:", miscellaneous_folder)
         else:
             print("Error creating Miscellaneous folder.")
+        
+        # Call organizer script
+        organizer.organize_pdf_files(downloads_folder)
     else:
         print("Downloads folder not found for the current user.")
         print("Please select the downloads folder manually.")
