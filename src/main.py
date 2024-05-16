@@ -42,6 +42,20 @@ def main():
     else:
         print("Error creating Music folder.")
     
+    # Create Archives folder
+    archives_folder = folders.create_archives_folder(downloads_folder)
+    if archives_folder:
+        print("Archives Folder Path:", archives_folder)
+    else:
+        print("Error creating Archives folder.")
+    
+    # Create Software folder
+    software_folder = folders.create_software_folder(downloads_folder)
+    if software_folder:
+        print("Software Folder Path:", software_folder)
+    else:
+        print("Error creating Software folder.")
+    
     # Determine operating system
     os_system = platform.system()
     if os_system == "Windows":
@@ -64,6 +78,9 @@ def main():
     # Call organizer script for each software folder dictionary
     for folders_dict in [organizer.document_folders, organizer.image_folders, organizer.video_folders, organizer.music_folders, organizer.archive_folders, software_folders]:
         organizer.organize_files(downloads_folder, folders_dict)
+
+    # Move duplicate folders
+    organizer.move_duplicate_folders(downloads_folder)
 
 if __name__ == "__main__":
     main()

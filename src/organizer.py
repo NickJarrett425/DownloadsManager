@@ -187,3 +187,4 @@ class DecisionDialog(tk.Toplevel):
     def skip(self):
         self.choice = "skip"
         self.destroy()
+
