@@ -79,8 +79,5 @@ def main():
     for folders_dict in [organizer.document_folders, organizer.image_folders, organizer.video_folders, organizer.music_folders, organizer.archive_folders, software_folders]:
         organizer.organize_files(downloads_folder, folders_dict)
 
-    # Move duplicate folders
-    organizer.move_duplicate_folders(downloads_folder)
-
 if __name__ == "__main__":
     main()
