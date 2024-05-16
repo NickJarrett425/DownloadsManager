@@ -49,16 +49,17 @@ def main():
             print("Unknown operating system. Using default Windows software folder.")
             software_folders = organizer.windows_software
         
-        # Call organizer script for each software folder dictionary
-        for folders_dict in [organizer.document_folders, organizer.image_folders, organizer.video_folders, organizer.music_folders, organizer.archive_folders, software_folders]:
-            organizer.organize_files(downloads_folder, folders_dict)
-        
         # Create Miscellaneous folder
         miscellaneous_folder = folders.create_miscellaneous_folder(downloads_folder)
         if miscellaneous_folder:
             print("Miscellaneous Folder Path:", miscellaneous_folder)
         else:
             print("Error creating Miscellaneous folder.")
+        
+        # Call organizer script for each software folder dictionary
+        for folders_dict in [organizer.document_folders, organizer.image_folders, organizer.video_folders, organizer.music_folders, organizer.archive_folders, software_folders]:
+            organizer.organize_files(downloads_folder, folders_dict)
+        
     else:
         print("Downloads folder not found for the current user.")
         print("Please select the downloads folder manually.")

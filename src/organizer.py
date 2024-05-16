@@ -33,26 +33,15 @@ archive_folders = {
 }
 
 windows_software = {
-    "Executables": [".exe"],
-    "Installers": [".msi"],
-    "Batch Files": [".bat"],
-    "Java Files": [".jar"],
-    "Python Files": [".py"]
+    "Software": [".exe", ".msi", ".bat", ".jar", ".py"]
 }
 
 mac_software = {
-    "Disk Images": [".dmg"],
-    "Applications": [".app"],
-    "Java Files": [".jar"],
-    "Python Files": [".py"]
+    "Software": [".dmg", ".app", ".jar", ".py"]
 }
 
 linux_software = {
-    "Debian Packages": [".deb"],
-    "RPM Packages": [".rpm"],
-    "Shell Scripts": [".sh"],
-    "Java Files": [".jar"],
-    "Python Files": [".py"]
+    "Software": [".deb", ".rpm", ".sh", ".jar", ".py"]
 }
 
 def organize_files(downloads_folder, folders_dict):
@@ -81,7 +70,8 @@ def organize_files(downloads_folder, folders_dict):
                 continue
 
             for file in files:
-                if any(file.lower().endswith(ext) for ext in extensions):
+                file_extension = os.path.splitext(file)[1].lower()
+                if any(file_extension == ext for ext in extensions):
                     file_path = os.path.join(root, file)
                     destination_path = os.path.join(folder_path, file)
                     if os.path.exists(destination_path):
@@ -99,6 +89,35 @@ def organize_files(downloads_folder, folders_dict):
                             continue  # Skip moving the file
 
                     shutil.move(file_path, destination_path)
+
+    # Handle files with extensions not found in any dictionary
+    for root, dirs, files in os.walk(downloads_folder):
+        for file in files:
+            file_extension = os.path.splitext(file)[1].lower()
+            if not any(file_extension in ext_list for ext_dict in [document_folders, image_folders, video_folders, music_folders, archive_folders, windows_software, mac_software, linux_software] for ext_list in ext_dict.values()):
+                misc_folder_path = os.path.join(downloads_folder, "Miscellaneous")
+                if root.startswith(misc_folder_path):
+                    continue  # Skip files already in the Miscellaneous folder
+
+                if not os.path.exists(misc_folder_path):
+                    os.makedirs(misc_folder_path)
+                file_path = os.path.join(root, file)
+                destination_path = os.path.join(misc_folder_path, file)
+                if os.path.exists(destination_path):
+                    choice = ask_user_decision(file)
+                    if choice == "rename":
+                        new_file_name = ask_user_new_name(file, [])
+                        if new_file_name:
+                            destination_path = os.path.join(misc_folder_path, new_file_name)
+                        else:
+                            continue  # Skip moving the file if renaming is canceled
+                    elif choice == "recycle":
+                        send2trash.send2trash(file_path)
+                        continue  # Move to the next file
+                    elif choice == "skip":
+                        continue  # Skip moving the file
+
+                shutil.move(file_path, destination_path)
 
 def ask_user_decision(file):
     root = tk.Tk()
@@ -118,7 +137,11 @@ def ask_user_new_name(file, extensions):
         # Check if the new name already has an extension
         if not any(new_name.lower().endswith(ext) for ext in extensions):
             # Add the correct extension if missing
-            new_name += extensions[0]
+            if extensions:
+                new_name += extensions[0]
+            else:
+                _, ext = os.path.splitext(file)
+                new_name += ext
         return new_name
 
 class DecisionDialog(tk.Toplevel):
