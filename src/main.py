@@ -1,6 +1,7 @@
 import finder
 import folders
 import organizer
+import platform
 
 def main():
     downloads_folder = finder.find_downloads_folder()
@@ -36,19 +37,21 @@ def main():
         else:
             print("Error creating Music folder.")
         
-        # Create Software folder
-        software_folder = folders.create_software_folder(downloads_folder)
-        if software_folder:
-            print("Software Folder Path:", software_folder)
+        # Determine operating system
+        os_system = platform.system()
+        if os_system == "Windows":
+            software_folders = organizer.windows_software
+        elif os_system == "Darwin":  # macOS
+            software_folders = organizer.mac_software
+        elif os_system == "Linux":
+            software_folders = organizer.linux_software
         else:
-            print("Error creating Software folder.")
+            print("Unknown operating system. Using default Windows software folder.")
+            software_folders = organizer.windows_software
         
-        # Create Archives folder
-        archives_folder = folders.create_archives_folder(downloads_folder)
-        if archives_folder:
-            print("Archives Folder Path:", archives_folder)
-        else:
-            print("Error creating Archives folder.")
+        # Call organizer script for each software folder dictionary
+        for folders_dict in [organizer.document_folders, organizer.image_folders, organizer.video_folders, organizer.music_folders, organizer.archive_folders, software_folders]:
+            organizer.organize_files(downloads_folder, folders_dict)
         
         # Create Miscellaneous folder
         miscellaneous_folder = folders.create_miscellaneous_folder(downloads_folder)
@@ -56,9 +59,6 @@ def main():
             print("Miscellaneous Folder Path:", miscellaneous_folder)
         else:
             print("Error creating Miscellaneous folder.")
-        
-        # Call organizer script
-        organizer.organize_pdf_files(downloads_folder)
     else:
         print("Downloads folder not found for the current user.")
         print("Please select the downloads folder manually.")

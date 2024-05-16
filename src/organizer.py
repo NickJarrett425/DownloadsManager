@@ -4,37 +4,101 @@ import tkinter as tk
 from tkinter import simpledialog, ttk
 import send2trash
 
-def organize_pdf_files(downloads_folder):
-    pdf_folder = os.path.join(downloads_folder, "Documents", "PDFs")
-    if not os.path.exists(pdf_folder):
-        os.makedirs(pdf_folder)
+document_folders = {
+    "PDFs": [".pdf"],
+    "Word Documents": [".docx", ".doc", ".rtf"],
+    "Spreadsheets": [".xlsx", ".xls", ".csv"],
+    "Presentations": [".pptx", ".ppt"],
+    "Text Files": [".txt"]
+}
 
-    for root, dirs, files in os.walk(downloads_folder):
-        # Exclude pdf_folder and its subfolders from the search
-        if root.startswith(pdf_folder):
-            continue
+image_folders = {
+    "Pictures": [".jpg", ".jpeg", ".png", ".bmp", ".tiff", ".svg"],
+    "GIFs": [".gif"],
+    "Photoshop Documents": [".psd"]
+}
 
-        for file in files:
-            if file.lower().endswith(".pdf"):
-                pdf_path = os.path.join(root, file)
-                destination_path = os.path.join(pdf_folder, file)
-                if os.path.exists(destination_path):
-                    choice = ask_user_decision(file)
-                    if choice == "rename":
-                        new_file_name = ask_user_new_name(file)
-                        if new_file_name:
-                            if not new_file_name.endswith(".pdf"):
-                                new_file_name += ".pdf"
-                            destination_path = os.path.join(pdf_folder, new_file_name)
-                        else:
-                            continue  # Skip moving the file if renaming is canceled
-                    elif choice == "recycle":
-                        send2trash.send2trash(pdf_path)
-                        continue  # Move to the next file
-                    elif choice == "skip":
-                        continue  # Skip moving the file
+video_folders = {
+    "Videos": [".mp4", ".avi", ".mkv", ".mov", ".wmv", ".flv"]
+}
 
-                shutil.move(pdf_path, destination_path)
+music_folders = {
+    "Music": [".mp3", ".wav", ".flac", ".m4a", ".aac", ".ogg", ".wma"]
+}
+
+archive_folders = {
+    "Archives": [".zip", ".rar", ".7z", ".tar"],
+    "Compressed Files": [".gz", ".bz2"],
+    "Disk Images": [".iso"]
+}
+
+windows_software = {
+    "Executables": [".exe"],
+    "Installers": [".msi"],
+    "Batch Files": [".bat"],
+    "Java Files": [".jar"],
+    "Python Files": [".py"]
+}
+
+mac_software = {
+    "Disk Images": [".dmg"],
+    "Applications": [".app"],
+    "Java Files": [".jar"],
+    "Python Files": [".py"]
+}
+
+linux_software = {
+    "Debian Packages": [".deb"],
+    "RPM Packages": [".rpm"],
+    "Shell Scripts": [".sh"],
+    "Java Files": [".jar"],
+    "Python Files": [".py"]
+}
+
+def organize_files(downloads_folder, folders_dict):
+    if folders_dict is document_folders:
+        base_folder = "Documents"
+    elif folders_dict is image_folders:
+        base_folder = "Images"
+    elif folders_dict is video_folders:
+        base_folder = "Videos"
+    elif folders_dict is music_folders:
+        base_folder = "Music"
+    elif folders_dict is archive_folders:
+        base_folder = "Archives"
+    elif folders_dict is windows_software or folders_dict is mac_software or folders_dict is linux_software:
+        base_folder = "Software"
+    else:
+        base_folder = "Miscellaneous"
+
+    for folder_name, extensions in folders_dict.items():
+        folder_path = os.path.join(downloads_folder, base_folder, folder_name)
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
+
+        for root, dirs, files in os.walk(downloads_folder):
+            if root.startswith(folder_path):
+                continue
+
+            for file in files:
+                if any(file.lower().endswith(ext) for ext in extensions):
+                    file_path = os.path.join(root, file)
+                    destination_path = os.path.join(folder_path, file)
+                    if os.path.exists(destination_path):
+                        choice = ask_user_decision(file)
+                        if choice == "rename":
+                            new_file_name = ask_user_new_name(file, extensions)
+                            if new_file_name:
+                                destination_path = os.path.join(folder_path, new_file_name)
+                            else:
+                                continue  # Skip moving the file if renaming is canceled
+                        elif choice == "recycle":
+                            send2trash.send2trash(file_path)
+                            continue  # Move to the next file
+                        elif choice == "skip":
+                            continue  # Skip moving the file
+
+                    shutil.move(file_path, destination_path)
 
 def ask_user_decision(file):
     root = tk.Tk()
@@ -43,7 +107,7 @@ def ask_user_decision(file):
     root.wait_window(dialog)
     return dialog.choice
 
-def ask_user_new_name(file):
+def ask_user_new_name(file, extensions):
     while True:
         new_name = simpledialog.askstring("Rename File", f"A file named '{file}' already exists in the destination folder. Please provide a new name:")
         if new_name is None:  # User clicked cancel
@@ -51,9 +115,10 @@ def ask_user_new_name(file):
         if new_name.lower() == file.lower():
             tk.messagebox.showerror("Error", "You cannot use the same name as the original file.")
             continue
-        if os.path.splitext(new_name)[0] == os.path.splitext(file)[0]:
-            tk.messagebox.showerror("Error", "You cannot use the same name as the original file.")
-            continue
+        # Check if the new name already has an extension
+        if not any(new_name.lower().endswith(ext) for ext in extensions):
+            # Add the correct extension if missing
+            new_name += extensions[0]
         return new_name
 
 class DecisionDialog(tk.Toplevel):
