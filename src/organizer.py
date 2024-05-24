@@ -1,13 +1,13 @@
 import os
 import shutil
 import tkinter as tk
-from tkinter import simpledialog, ttk
+from tkinter import simpledialog, ttk, messagebox
 import send2trash
 
 document_folders = {
     "PDFs": [".pdf"],
     "Word Documents": [".docx", ".doc", ".rtf"],
-    "Spreadsheets": [".xlsx", ".xls", ".csv"],
+    "Spreadsheets": [".xlsx", ".xls", ".csv", ".xlsm"],
     "Presentations": [".pptx", ".ppt"],
     "Text Files": [".txt"]
 }
@@ -33,15 +33,26 @@ archive_folders = {
 }
 
 windows_software = {
-    "Software": [".exe", ".msi", ".bat", ".jar", ".py"]
+    "Executables": [".exe"],
+    "Installers": [".msi"],
+    "Batch Files": [".bat"],
+    "Java Files": [".jar"],
+    "Python Files": [".py"]
 }
 
 mac_software = {
-    "Software": [".dmg", ".app", ".jar", ".py"]
+    "Disk Images": [".dmg"],
+    "Applications": [".app"],
+    "Java Files": [".jar"],
+    "Python Files": [".py"]
 }
 
 linux_software = {
-    "Software": [".deb", ".rpm", ".sh", ".jar", ".py"]
+    "Debian Packages": [".deb"],
+    "RPM Packages": [".rpm"],
+    "Shell Scripts": [".sh"],
+    "Java Files": [".jar"],
+    "Python Files": [".py"]
 }
 
 def organize_files(downloads_folder, folders_dict):
@@ -131,8 +142,10 @@ def ask_user_new_name(file, extensions):
         new_name = simpledialog.askstring("Rename File", f"A file named '{file}' already exists in the destination folder. Please provide a new name:")
         if new_name is None:  # User clicked cancel
             return None
-        if new_name.lower() == file.lower():
-            tk.messagebox.showerror("Error", "You cannot use the same name as the original file.")
+        original_name_without_ext = os.path.splitext(file)[0].lower()
+        new_name_without_ext = os.path.splitext(new_name)[0].lower()
+        if new_name_without_ext == original_name_without_ext:
+            messagebox.showerror("Error", "You cannot use the same name as the original file.")
             continue
         # Check if the new name already has an extension
         if not any(new_name.lower().endswith(ext) for ext in extensions):
@@ -187,4 +200,3 @@ class DecisionDialog(tk.Toplevel):
     def skip(self):
         self.choice = "skip"
         self.destroy()
-
