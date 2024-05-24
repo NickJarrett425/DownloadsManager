@@ -72,7 +72,12 @@ def organize_files(downloads_folder, folders_dict):
         base_folder = "Miscellaneous"
 
     for folder_name, extensions in folders_dict.items():
-        folder_path = os.path.join(downloads_folder, base_folder, folder_name)
+        # For Videos and Music, don't create a subfolder named the same as the base folder
+        if base_folder in ["Videos", "Music"]:
+            folder_path = os.path.join(downloads_folder, base_folder)
+        else:
+            folder_path = os.path.join(downloads_folder, base_folder, folder_name)
+
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
 

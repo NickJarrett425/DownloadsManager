@@ -78,6 +78,9 @@ def main():
     # Call organizer script for each software folder dictionary
     for folders_dict in [organizer.document_folders, organizer.image_folders, organizer.video_folders, organizer.music_folders, organizer.archive_folders, software_folders]:
         organizer.organize_files(downloads_folder, folders_dict)
+    
+    # Delete empty folders
+    folders.delete_empty_folders(downloads_folder)
 
 if __name__ == "__main__":
     main()

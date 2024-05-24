@@ -266,3 +266,10 @@ def create_miscellaneous_folder(downloads_folder):
         except Exception as e:
             print(f"An error occurred while creating Miscellaneous folder: {str(e)}")
             return None
+        
+def delete_empty_folders(folder):
+    for root, dirs, files in os.walk(folder, topdown=False):
+        for dir in dirs:
+            dir_path = os.path.join(root, dir)
+            if not os.listdir(dir_path):  # Check if the directory is empty
+                os.rmdir(dir_path)
