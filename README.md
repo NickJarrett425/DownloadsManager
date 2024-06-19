@@ -23,4 +23,8 @@ _Note: If using Unix or MacOS, replace python with python3 in each command._
 Found a bug? Please submit an issue using the "Issues" tab above. If you want to contribute by fixing the bug or adding a new features, please submit a pull request referencing the issue you created.
 
 ## Demo Video
-Coming soon...
+<p align="center">
+  <a href="https://youtu.be/o7jhCxj4J4II">
+    <img src="https://github.com/NickJarrett425/DriversOnly/DownloadsIcon.PNG" alt="Demo Video Link" width="50%">
+  </a>
+</p>
