@@ -25,6 +25,6 @@ Found a bug? Please submit an issue using the "Issues" tab above. If you want to
 ## Demo Video
 <p align="center">
   <a href="https://youtu.be/o7jhCxj4J4II">
-    <img src="https://github.com/NickJarrett425/DownloadsManager/blob/main/DownloadsIcon.png" alt="Demo Video Link" width="50%" max-height="100px">
+    <img src="https://github.com/NickJarrett425/DownloadsManager/blob/main/DownloadsIcon.png" alt="Demo Video Link" width="50%" max-height="10px">
   </a>
 </p>
